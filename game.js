@@ -11,9 +11,9 @@ class DungeonGame {
    */
   static generate(difficulty = 'medium') {
     const settings = {
-      easy:   { range: 15, healChance: 60 },
-      medium: { range: 18, healChance: 42 },
-      hard:   { range: 20, healChance: 28 },
+      easy:   { range: 15, healChance: 40 },
+      medium: { range: 20, healChance: 25 },
+      hard:   { range: 25, healChance: 10 },
     };
     const { range, healChance } = settings[difficulty] || settings.medium;
     const R = DungeonGame.ROWS, C = DungeonGame.COLS;
@@ -38,46 +38,51 @@ class DungeonGame {
     return grid;
   }
 
-  /**
-   * Bottom-up DP to compute minimum initial health needed.
-   *
-   * Formula: dp[i][j] = max(1, min(dp[i+1][j], dp[i][j+1]) - dungeon[i][j])
-   * Base:    dp[R-1][C-1] = max(1, 1 - dungeon[R-1][C-1])
-   *
-   * dp[i][j] = the minimum health the knight must have ON ENTERING cell (i,j)
-   * to survive all the way to the princess from there.
-   *
-   * @param {number[][]} grid
-   * @returns {number[][]} dp table
-   */
-  static computeDP(grid) {
-    const R = DungeonGame.ROWS, C = DungeonGame.COLS;
-    // Build dp table filled with Infinity as sentinel
-    const dp = Array.from({ length: R + 1 }, () => Array(C + 1).fill(Infinity));
+/**
+ * Top-down memoized DP to compute minimum initial health needed.
+ *
+ * Formula: solve(i, j) = max(1, min(solve(i+1,j), solve(i,j+1)) - dungeon[i][j])
+ * Base:    solve(R-1, C-1) = max(1, 1 - dungeon[R-1][C-1])
+ *
+ * solve(i, j) = the minimum health the knight must have ON ENTERING cell (i,j)
+ * to survive all the way to the princess from there.
+ *
+ * @param {number[][]} grid
+ * @returns {number[][]} memo table (equivalent to the old dp table)
+ */
+static computeDP(grid) {
+  const R = DungeonGame.ROWS, C = DungeonGame.COLS;
+  // memo[i][j] = null means not yet computed
+  const memo = Array.from({ length: R }, () => Array(C).fill(null));
+
+  function solve(r, c) {
+    // Already computed
+    if (memo[r][c] !== null) return memo[r][c];
 
     // Base case: princess room
-    dp[R - 1][C - 1] = Math.max(1, 1 - grid[R - 1][C - 1]);
-
-    // Fill last row (can only move right)
-    for (let c = C - 2; c >= 0; c--) {
-      dp[R - 1][c] = Math.max(1, dp[R - 1][c + 1] - grid[R - 1][c]);
+    if (r === R - 1 && c === C - 1) {
+      return (memo[r][c] = Math.max(1, 1 - grid[r][c]));
     }
 
-    // Fill last column (can only move down)
-    for (let r = R - 2; r >= 0; r--) {
-      dp[r][C - 1] = Math.max(1, dp[r + 1][C - 1] - grid[r][C - 1]);
+    const canDown  = r < R - 1;
+    const canRight = c < C - 1;
+    let best;
+
+    if (canDown && canRight) {
+      best = Math.min(solve(r + 1, c), solve(r, c + 1));
+    } else if (canDown) {
+      best = solve(r + 1, c);   // last column: can only go down
+    } else {
+      best = solve(r, c + 1);   // last row:    can only go right
     }
 
-    // Fill remaining cells (bottom-right to top-left)
-    for (let r = R - 2; r >= 0; r--) {
-      for (let c = C - 2; c >= 0; c--) {
-        const best = Math.min(dp[r + 1][c], dp[r][c + 1]);
-        dp[r][c] = Math.max(1, best - grid[r][c]);
-      }
-    }
-
-    return dp;
+    return (memo[r][c] = Math.max(1, best - grid[r][c]));
   }
+
+  // Kick off recursion from the start cell — fills memo on demand
+  solve(0, 0);
+  return memo;
+}
 
   /**
    * Trace the optimal path the DP found (greedy: always pick neighbor with lower dp value).
