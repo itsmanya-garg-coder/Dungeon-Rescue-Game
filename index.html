@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dungeon Rescue — Save the Princess</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- SPLASH SCREEN -->
+  <div id="splash">
+    <div class="splash-bg"></div>
+    <div class="splash-content">
+      <div class="splash-emblem">⚔</div>
+      <h1 class="splash-title">DUNGEON<br><span>RESCUE</span></h1>
+      <p class="splash-sub">Navigate the cursed labyrinth. Save the princess. Survive.</p>
+      <div class="splash-info">
+        <div class="info-item"><span class="info-icon">↓→</span><span>Move only right or down</span></div>
+        <div class="info-item"><span class="info-icon">♥</span><span>Health must never reach zero</span></div>
+        <div class="info-item"><span class="info-icon">◈</span><span>DP computes your min required health</span></div>
+      </div>
+      <div class="diff-pick">
+        <span class="diff-label">Choose thy fate:</span>
+        <div class="diff-buttons">
+          <button class="diff-btn" data-diff="easy">Squire</button>
+          <button class="diff-btn active" data-diff="medium">Knight</button>
+          <button class="diff-btn" data-diff="hard">Paladin</button>
+        </div>
+      </div>
+      <button class="start-btn" id="startBtn">Enter the Dungeon</button>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="game" class="hidden">
+    <div class="game-layout">
+
+      <!-- LEFT PANEL -->
+      <aside class="side-panel left-panel">
+        <div class="panel-logo">⚔ DUNGEON<br>RESCUE</div>
+
+        <div class="stat-block">
+          <div class="stat-item" id="stat-health">
+            <div class="stat-icon">♥</div>
+            <div class="stat-body">
+              <div class="stat-label">Health</div>
+              <div class="stat-value" id="health-val">—</div>
+            </div>
+            <div class="health-bar-wrap"><div class="health-bar" id="health-bar"></div></div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">◈</div>
+            <div class="stat-body">
+              <div class="stat-label">Min Required</div>
+              <div class="stat-value accent" id="min-val">—</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">⊹</div>
+            <div class="stat-body">
+              <div class="stat-label">Moves</div>
+              <div class="stat-value" id="moves-val">0</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">♛</div>
+            <div class="stat-body">
+              <div class="stat-label">Rescues</div>
+              <div class="stat-value gold" id="rescues-val">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="legend-block">
+          <div class="legend-title">Legend</div>
+          <div class="legend-item"><div class="leg-swatch damage"></div><span>Damage room</span></div>
+          <div class="legend-item"><div class="leg-swatch heal"></div><span>Healing room</span></div>
+          <div class="legend-item"><div class="leg-swatch neutral"></div><span>Neutral room</span></div>
+          <div class="legend-item"><div class="leg-swatch knight"></div><span>Knight (you)</span></div>
+          <div class="legend-item"><div class="leg-swatch princess"></div><span>Princess</span></div>
+          <div class="legend-item"><div class="leg-swatch path"></div><span>Optimal path</span></div>
+        </div>
+
+        <div class="side-actions">
+          <button class="side-btn" id="pathToggleBtn">Show Optimal Path</button>
+          <button class="side-btn" id="newGameBtn">New Dungeon</button>
+          <button class="side-btn ghost" id="backBtn">← Back to Menu</button>
+        </div>
+      </aside>
+
+      <!-- CENTER: GRID -->
+      <main class="game-center">
+        <div class="toast-container">
+          <div class="toast" id="toast"></div>
+        </div>
+
+        <div class="dungeon-frame">
+          <div class="dungeon-corner tl"></div>
+          <div class="dungeon-corner tr"></div>
+          <div class="dungeon-corner bl"></div>
+          <div class="dungeon-corner br"></div>
+          <div id="grid" class="dungeon-grid" role="grid" aria-label="7x7 dungeon grid"></div>
+        </div>
+
+        <!-- MOBILE CONTROLS -->
+        <div class="mobile-controls">
+          <div class="ctrl-row">
+            <button class="ctrl-btn ghost-ctrl" id="mUpBtn" aria-label="up (blocked)">↑</button>
+          </div>
+          <div class="ctrl-row">
+            <button class="ctrl-btn ghost-ctrl" id="mLeftBtn" aria-label="left (blocked)">←</button>
+            <button class="ctrl-btn" id="mDownBtn" aria-label="move down">↓</button>
+            <button class="ctrl-btn" id="mRightBtn" aria-label="move right">→</button>
+          </div>
+          <div class="ctrl-hint">Arrow keys / WASD also work</div>
+        </div>
+      </main>
+
+      <!-- RIGHT PANEL -->
+      <aside class="side-panel right-panel">
+        <div class="difficulty-block">
+          <div class="rp-title">Difficulty</div>
+          <div class="diff-pills">
+            <button class="diff-pill" data-diff="easy">Squire</button>
+            <button class="diff-pill active" data-diff="medium">Knight</button>
+            <button class="diff-pill" data-diff="hard">Paladin</button>
+          </div>
+        </div>
+
+        <!-- <div class="dp-explainer">
+          <div class="rp-title">DP Formula</div>
+          <div class="dp-box">
+            <div class="dp-line main">dp[i][j] =</div>
+            <div class="dp-line">max(1, min(</div>
+            <div class="dp-line indent">dp[i+1][j],</div>
+            <div class="dp-line indent">dp[i][j+1]</div>
+            <div class="dp-line">) − dungeon[i][j])</div>
+            <div class="dp-divider"></div>
+            <div class="dp-line small">Base case:</div>
+            <div class="dp-line small">dp[6][6] = max(1,</div>
+            <div class="dp-line small indent">1 − dungeon[6][6])</div>
+          </div>
+        </div> -->
+
+        <div class="room-log">
+          <div class="rp-title">Room Log</div>
+          <div id="log-list" class="log-list"></div>
+        </div>
+
+        <div class="key-hints">
+          <div class="rp-title">Controls</div>
+          <div class="key-row"><kbd>→</kbd> or <kbd>D</kbd> <span>Move right</span></div>
+          <div class="key-row"><kbd>↓</kbd> or <kbd>S</kbd> <span>Move down</span></div>
+          <div class="key-row"><kbd>P</kbd> <span>Toggle path</span></div>
+          <div class="key-row"><kbd>R</kbd> <span>New dungeon</span></div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- OVERLAY: Death / Win -->
+  <div id="overlay" class="overlay hidden">
+    <div class="overlay-card" id="overlay-card">
+      <div class="overlay-icon" id="overlay-icon"></div>
+      <div class="overlay-title" id="overlay-title"></div>
+      <div class="overlay-sub" id="overlay-sub"></div>
+      <div class="overlay-progress">
+        <div class="overlay-progress-bar" id="overlay-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
