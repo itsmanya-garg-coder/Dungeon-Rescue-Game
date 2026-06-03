@@ -116,9 +116,9 @@ static computeDP(grid) {
 }
 
 
-/* ═══════════════════════════════════════════════════
-   2. PLAYER
-═══════════════════════════════════════════════════ */
+/* 
+   PLAYER
+*/
 
 class Player {
   constructor(health) {
@@ -139,9 +139,9 @@ class Player {
 }
 
 
-/* ═══════════════════════════════════════════════════
-   3. UI
-═══════════════════════════════════════════════════ */
+/* 
+   UI
+*/
 
 class UI {
   constructor() {
@@ -277,9 +277,9 @@ class UI {
 }
 
 
-/* ═══════════════════════════════════════════════════
+/* 
    4. GAME ENGINE
-═══════════════════════════════════════════════════ */
+*/
 
 class GameEngine {
   constructor() {
@@ -300,7 +300,7 @@ class GameEngine {
     this._initSplash();
   }
 
-  /* ── INIT ─────────────────────────────────────── */
+  /*  INIT */
 
   _initSplash() {
     // Splash difficulty buttons
@@ -327,7 +327,7 @@ class GameEngine {
     });
   }
 
-  /* ── NEW DUNGEON ──────────────────────────────── */
+  /*  NEW DUNGEON  */
 
   _newDungeon() {
     this.dungeon   = DungeonGame.generate(this.difficulty);
@@ -352,7 +352,7 @@ class GameEngine {
     this.ui.toast(`Min health required: ${this.minHealth}. You start with ${this.player.health} HP.`, 'info');
   }
 
-  /* ── MOVE ─────────────────────────────────────── */
+  /*  MOVE  */
 
   move(dr, dc) {
     if (this.locked) return;
@@ -459,14 +459,14 @@ class GameEngine {
     this.ui.toast(`Restarted with ${this.player.health} HP. Min required: ${this.minHealth}.`, 'info');
   }
 
-  /* ── RENDER ───────────────────────────────────── */
+  /*  RENDER  */
 
   _render() {
     this.ui.renderGrid(this.dungeon, this.player, this.visited, this.showPath, this.optPath);
     this.ui.updateHUD(this.player, this.minHealth, this.moves, this.rescues);
   }
 
-  /* ── INPUT BINDING ────────────────────────────── */
+  /*  INPUT BINDING  */
 
   _bindInputs() {
     // Keyboard
@@ -519,9 +519,9 @@ class GameEngine {
 }
 
 
-/* ═══════════════════════════════════════════════════
-   5. BOOTSTRAP
-═══════════════════════════════════════════════════ */
+/* 
+    BOOTSTRAP
+ */
 
 window.addEventListener('DOMContentLoaded', () => {
   window._game = new GameEngine();

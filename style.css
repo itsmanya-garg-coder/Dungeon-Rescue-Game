@@ -1,8 +1,8 @@
-/* ===================================================
+/* 
    DUNGEON RESCUE GAME — style.css
    Aesthetic: Dark medieval / gothic dungeon
    Font: Cinzel (display) + Crimson Pro (body)
-=================================================== */
+ */
 
 :root {
   --bg-deepest:   #0a0806;
@@ -54,7 +54,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ─── SPLASH ─────────────────────────────────────── */
+/*  SPLASH  */
 
 #splash {
   position: fixed; inset: 0;
@@ -230,7 +230,7 @@ body {
   transform: scale(1.02);
 }
 
-/* ─── GAME LAYOUT ─────────────────────────────────── */
+/*  GAME LAYOUT  */
 
 #game {
   min-height: 100vh;
@@ -247,7 +247,7 @@ body {
   gap: 0;
 }
 
-/* ─── SIDE PANELS ─────────────────────────────────── */
+/*  SIDE PANELS  */
 
 .side-panel {
   background: var(--bg-panel);
@@ -274,7 +274,7 @@ body {
   text-shadow: 0 0 20px rgba(200,148,58,0.4);
 }
 
-/* ─── STAT BLOCK ──────────────────────────────────── */
+/*  STAT BLOCK  */
 
 .stat-block {
   display: flex;
@@ -323,7 +323,7 @@ body {
   /* sits below the stat row */
 }
 
-/* ─── LEGEND ──────────────────────────────────────── */
+/*  LEGEND  */
 
 .legend-block { display: flex; flex-direction: column; gap: 0.35rem; }
 .legend-title, .rp-title {
@@ -352,7 +352,7 @@ body {
 .leg-swatch.princess { background: var(--princess-gold); border: 1px solid var(--princess-bright); }
 .leg-swatch.path    { background: transparent; border: 2px solid var(--gold); }
 
-/* ─── SIDE ACTIONS ────────────────────────────────── */
+/*  SIDE ACTIONS  */
 
 .side-actions { display: flex; flex-direction: column; gap: 0.4rem; margin-top: auto; }
 
@@ -375,7 +375,7 @@ body {
 .side-btn.ghost:hover { color: var(--text-sec); border-color: var(--stone-light); }
 .side-btn.active-path { border-color: var(--gold); color: var(--gold); }
 
-/* ─── GAME CENTER ─────────────────────────────────── */
+/*  GAME CENTER  */
 
 .game-center {
   display: flex;
@@ -391,7 +391,7 @@ body {
   position: relative;
 }
 
-/* ─── TOAST ───────────────────────────────────────── */
+/*  TOAST  */
 
 .toast-container {
   position: absolute;
@@ -421,7 +421,7 @@ body {
 .toast.neutral { background: rgba(50,40,28,0.95); border-color: var(--stone-light); color: var(--text-sec); }
 .toast.success { background: rgba(80,55,10,0.95); border-color: var(--gold); color: var(--gold-light); }
 
-/* ─── DUNGEON FRAME ───────────────────────────────── */
+/*  DUNGEON FRAME  */
 
 .dungeon-frame {
   position: relative;
@@ -443,7 +443,7 @@ body {
 .dungeon-corner.bl { bottom: -1px; left: -1px; border-bottom-width: 2px; border-left-width: 2px; }
 .dungeon-corner.br { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; }
 
-/* ─── DUNGEON GRID ────────────────────────────────── */
+/*  DUNGEON GRID  */
 
 .dungeon-grid {
   display: grid;
@@ -452,7 +452,7 @@ body {
   gap: 3px;
 }
 
-/* ─── CELL ────────────────────────────────────────── */
+/*  CELL  */
 
 .cell {
   width: var(--cell-size);
@@ -583,7 +583,7 @@ body {
   to   { transform: scale(1.08) rotate(0deg); opacity: 1; }
 }
 
-/* ─── MOBILE CONTROLS ─────────────────────────────── */
+/*  MOBILE CONTROLS  */
 
 .mobile-controls {
   display: flex;
@@ -627,7 +627,7 @@ body {
   letter-spacing: 0.04em;
 }
 
-/* ─── RIGHT PANEL SPECIFICS ───────────────────────── */
+/*  RIGHT PANEL SPECIFICS  */
 
 .difficulty-block { display: flex; flex-direction: column; gap: 0.4rem; }
 .diff-pills { display: flex; flex-direction: column; gap: 0.3rem; }
@@ -695,7 +695,7 @@ kbd {
   letter-spacing: 0.04em;
 }
 
-/* ─── OVERLAY ─────────────────────────────────────── */
+/*  OVERLAY  */
 
 .overlay {
   position: fixed; inset: 0;
@@ -758,13 +758,13 @@ kbd {
   to   { transform: scaleX(1); }
 }
 
-/* ─── SCROLLBAR STYLING ───────────────────────────── */
+/*  SCROLLBAR STYLING  */
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--stone); border-radius: 2px; }
 
-/* ─── RESPONSIVE ──────────────────────────────────── */
+/*  RESPONSIVE  */
 
 @media (max-width: 900px) {
   .game-layout {
