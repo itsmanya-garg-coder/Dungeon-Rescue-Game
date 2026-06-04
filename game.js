@@ -25,7 +25,7 @@ class DungeonGame {
         if (Math.random() * 100 < healChance) {
           grid[r].push(DungeonGame._rand(1, range));
         } else {
-          grid[r].push(DungeonGame._rand(-range, range));
+          grid[r].push(DungeonGame._rand(-range, 0));
         }
       }
     }
